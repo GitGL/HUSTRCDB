@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Projector Problems</title>
+<style>
+table,th,td
+{
+border:1px solid black;
+border-collapse:collapse;
+}
+</style>
+
+</head>
+<body>
+{% if projector_problems %}
+<table style="width:1200px">
+<tr>
+  <th>记录NO</th>
+  <th>Projector ID</th>
+  <th>Content</th>
+  <th>记录日期</th>
+  <th>Checked</th>
+</tr>
+
+{% for record in projector_problems %}
+<tr>
+  <td>{{ record.problem_id }}</td>
+  <td>{{ record.projector_id }}</td>
+  <td>{{ record.content }}</td>
+  <td>{{ record.date_register | date:"Y-m-d" }}</td>
+  <td>{{ record.checked}}</td>
+</tr>
+{% endfor %}
+</table>
+
+{% else %}
+	<p>No Problem Records are avaible.</p>
+{% endif %}
+
+<form name="input" action="{% url 'projectors:add_problem' 1 %}" method="get">
+
+<p>New Problem:</p>
+<!--<textarea rows="10" cols="30">
+The cat was playing in the garden.
+</textarea><br>-->
+<input type="text" name="newproblem" />
+<input type="submit" value="Submit" />
+
+</form>
+
+</body>
+</html>

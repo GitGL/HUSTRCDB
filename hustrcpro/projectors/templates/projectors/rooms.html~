@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Rooms</title>
+<style>
+table,th,td
+{
+border:1px solid black;
+border-collapse:collapse;
+}
+</style>
+</head>
+<body>
+	<h1>{{build.build_name}}</h1>
+																																																																																																																																																																				
+{% if build_room_projector_list %}
+<table style="width:1200px">
+<tr>
+  <th>楼宇号</th>
+  <th>教室号</th>
+  <th>教室名</th>
+  <th>设备号</th>
+  <th>品牌代码</th>
+  <th>品牌</th>
+  <th>品牌</th>
+  <th>序列号</th>
+  <th>状态代码</th>
+  <th>状态</th>
+  <th>记录日期</th>
+</tr>
+
+{% for room in build_room_projector_list %}
+<tr>
+  <td>{{ room.0 }}</td>
+  <td>{{ room.1 }}</td>
+  <td>{{ room.2 }}</td>
+  <td>{{ room.3 }}</td>
+  <td>{{ room.4 }}</td>
+  <td>{{ room.5 }}</td>
+  <td>{{ room.6 }}</td>
+  <td>{{ room.7 }}</td>
+  <td>{{ room.8 }}</td>
+  <td>{{ room.9 }}</td>
+  <td>{{ room.10 }}</td>
+</tr>
+{% endfor %}
+</table>
+{% else %}
+	<p>No Rooms are avaible.</p>
+{% endif %}
+
+</body>
+</html>

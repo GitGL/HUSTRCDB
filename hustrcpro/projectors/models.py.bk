@@ -1,0 +1,158 @@
+# This is an auto-generated Django model module.
+# You'll have to do the following manually to clean this up:
+#   * Rearrange models' order
+#   * Make sure each model has one field with primary_key=True
+#   * Remove `managed = False` lines for those models you wish to give write DB access
+# Feel free to rename the models, but don't rename db_table values or field names.
+#
+# Also note: You'll have to insert the output of 'django-admin.py sqlcustom [appname]'
+# into your database.
+from __future__ import unicode_literals
+
+from django.db import connection, models
+
+class BrandManager(models.Manager):
+    def brand_projectors(self, brand_id):
+        cursor = connection.cursor()
+        cursor.execute("""select b.brand_id, b.brand_cn, b.brand_en, b.model_number, p.projector_id, p.room_id, p.note from Brands b Left Join Projectors p On b.brand_id = p.brand_id where b.brand_id = %s""", [brand_id])
+        brand_projectors_list = cursor.fetchall()
+        return brand_projectors_list
+
+class Brand(models.Model):
+    #brand_id = models.IntegerField(primary_key=True)
+    brand_id = models.AutoField(primary_key=True)
+    brand_cn = models.CharField(max_length=45, blank=True)
+    brand_en = models.CharField(max_length=45, blank=True)
+    model_number = models.CharField(max_length=45, blank=True)
+
+    objects = BrandManager()
+
+    class Meta:
+        managed = False
+        db_table = 'Brands'
+    def __str__(self):
+        return self.brand_cn + str(': ') + self.model_number
+
+class Build(models.Model):
+    #build_id = models.IntegerField(primary_key=True)
+    build_id = models.AutoField(primary_key=True)
+    build_name = models.CharField(max_length=45, blank=True)
+    build_description = models.CharField(max_length=45, blank=True)
+    build_state = models.CharField(max_length=45, blank=True)
+    class Meta:
+        managed = False
+        db_table = 'Builds'
+    def __str__(self):
+        return self.build_name
+
+class Event(models.Model):
+    #event_id = models.IntegerField(primary_key=True)
+    event_id = models.AutoField(primary_key=True)
+    event_name = models.CharField(max_length=45, blank=True)
+    class Meta:
+        managed = False
+        db_table = 'Events'
+    def __str__(self):
+        return self.event_name
+
+class Maintenancerecord(models.Model):
+    #m_r_id = models.IntegerField(primary_key=True)
+    m_r_id = models.AutoField(primary_key=True)
+    projector = models.ForeignKey('Projector', blank=True, null=True)
+    event = models.ForeignKey(Event, blank=True, null=True)
+    date_register = models.DateField(blank=True, null=True)
+    event_note = models.CharField(max_length=45, blank=True)
+    #from_room = models.ForeignKey('Room', related_name='mr_from', blank=True, null=True)
+    from_room = models.ForeignKey('Room', db_column='from_room', related_name='mr_from', blank=True, null=True)
+    #from_room = models.ForeignKey('Room', db_column='from_room', blank=True, null=True)
+    #to_room = models.ForeignKey('Room', related_name='mr_to', blank=True, null=True)
+    to_room = models.ForeignKey('Room', db_column='to_room', related_name='mr_to', blank=True, null=True)
+    class Meta:
+        managed = False
+        db_table = 'MaintenanceRecords'
+
+class ProjectorManager(models.Manager):
+    def detail(self):
+        cursor = connection.cursor()
+        cursor.execute("""select p.projector_id, b.build_id, b.build_name, r.room_id, r.room_name, br.brand_id, br.brand_cn, br.brand_en, br.model_number, v.status_id, v.status_name, v.date_register from Projectors p LEFT JOIN Rooms r ON p.room_id = r.room_id LEFT JOIN Builds b ON r.build_id = b.build_id LEFT JOIN Brands br ON p.brand_id = br.brand_id LEFT JOIN view_projector_status v ON p.projector_id = v.projector_id""")
+        projector_list = cursor.fetchall()
+        return projector_list
+
+class Projector(models.Model):
+    #projector_id = models.IntegerField(primary_key=True)
+    projector_id = models.AutoField(primary_key=True)
+    brand = models.ForeignKey(Brand, blank=True, null=True)
+    room = models.ForeignKey('Room', blank=True, null=True)
+    note = models.CharField(max_length=45, blank=True)
+    serial_no = models.CharField(max_length=45, blank=True)
+    level_no = models.IntegerField(blank=True, null=True)
+
+    objects = ProjectorManager()
+
+    class Meta:
+        managed = False
+        db_table = 'Projectors'
+
+    def __str__(self):
+        return str(self.projector_id) + str(': ') + self.brand.brand_cn 
+        #return str(self.projector_id) + str(': ') + self.brand.brand_cn + self.serial_no
+
+    #def build_room(self):
+    #    return self.room
+    #build_room.short_description = 'Build Room'
+
+class RoomManager(models.Manager):
+    def room_projectors(self, build_id):
+        cursor = connection.cursor()
+        cursor.execute("""select r.build_id, r.room_id, r.room_name, p.projector_id, b.brand_id, b.brand_cn, b.brand_en, b.model_number, vps.state_id, vps.state_name, vps.date_register from Rooms r left join Projectors p on r.room_id = p.room_id left join Brands b on p.brand_id = b.brand_id left join view_projector_state vps on p.projector_id = vps.projector_id where r.build_id = %s""", [build_id])
+        room_projectors_list = cursor.fetchall()
+        #return [row for row in cursor.fetchone()]
+        return room_projectors_list
+
+class Room(models.Model):
+    #room_id = models.IntegerField(primary_key=True)
+    room_id = models.AutoField(primary_key=True)
+    build = models.ForeignKey(Build, blank=True, null=True)
+    room_name = models.CharField(max_length=5, blank=True)
+    room_style = models.CharField(max_length=45, blank=True)
+    room_description = models.CharField(max_length=45, blank=True)
+    room_state = models.CharField(max_length=45, blank=True)
+    
+    objects = RoomManager()
+    
+    class Meta:
+        managed = False
+        db_table = 'Rooms'
+    def __str__(self):
+        return self.build.build_name + str(': ') + self.room_name
+        #return self.room_name
+
+class Statusrecord(models.Model):
+    #s_r_id = models.IntegerField(primary_key=True)
+    s_r_id = models.AutoField(primary_key=True)
+    projector = models.ForeignKey(Projector, blank=True, null=True)
+    status = models.ForeignKey('Status', blank=True, null=True)
+    date_register = models.DateField(blank=True, null=True)
+    class Meta:
+        managed = False
+        db_table = 'StatusRecords'
+
+class Status(models.Model):
+    #state_id = models.IntegerField(primary_key=True)
+    status_id = models.AutoField(primary_key=True)
+    status_name = models.CharField(max_length=45, blank=True)
+    class Meta:
+        managed = False
+        db_table = 'Status'
+    def __str__(self):
+        return self.status_name
+class Problem(models.Model):
+	problem_id = models.AutoField(primary_key=True)
+	projector = models.ForeignKey(Projector, blank=True, null=True)
+	content = models.CharField(max_length=45, blank=True)
+	date_register = models.DateField(blank=True, null=True)
+	checked = models.IntegerField(blank=True, null=True)
+	class Meta:
+		managed = False
+		db_table = 'Problems'
+

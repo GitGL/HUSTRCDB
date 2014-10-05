@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Maintenance Records</title>
+<style>
+table,th,td
+{
+border:1px solid black;
+border-collapse:collapse;
+}
+</style>
+
+</head>
+<body>
+{% if maintenance_records %}
+<table style="width:1200px">
+<tr>
+  <th>记录NO</th>
+  <th>事件ID</th>
+  <th>事件</th>
+  <th>记录日期</th>
+</tr>
+
+{% for record in maintenance_records %}
+<tr>
+  <td>{{ record.m_r_id }}</td>
+  <td>{{ record.event_id }}</td>
+  <td>{{ record.event }}</td>
+  <td>{{ record.date_register | date:"Y-m-d"}}</td>
+</tr>
+{% endfor %}
+</table>
+
+{% else %}
+	<p>No State Records are avaible.</p>
+{% endif %}
+</body>
+</html>

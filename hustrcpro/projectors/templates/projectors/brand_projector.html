@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Brand Projectors</title>
+<style>
+table,th,td
+{
+border:1px solid black;
+border-collapse:collapse;
+}
+</style>
+</head>
+<body>
+	<h1>{{brand.brand_id}}: {{brand.brand_cn}}: {{brand.brand_en}}: {{brand.model_number}}</h1>
+																																																																																																																																																																				
+{% if brand_projector_list %}
+<table style="width:1200px">
+<tr>
+  <th>品牌代码</th>
+  <th>中文</th>
+  <th>英文</th>
+  <th>型号</th>
+  <th>设备号</th>
+<!--  <th>教室NO</th>
+  <th>备注</th> -->
+</tr>
+
+{% for bpr in brand_projector_list %}
+<tr>
+  <td>{{ bpr.0 }}</td>
+  <td>{{ bpr.1 }}</td>
+  <td>{{ bpr.2 }}</td>
+  <td>{{ bpr.3 }}</td>
+  <td>{{ bpr.4 }}</td>
+<!--  <td>{{ bpr.5 }}</td>
+  <td>{{ bpr.6 }}</td> -->
+</tr>
+{% endfor %}
+</table>
+{% else %}
+	<p>No Projectors are avaible.</p>
+{% endif %}
+</body>
+</html>

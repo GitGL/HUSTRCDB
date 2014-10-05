@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Projectors Detail</title>
+
+<style>
+table,th,td
+{
+border:1px solid black;
+border-collapse:collapse;
+}
+</style>
+
+</head>
+<body>
+{% if projector_list %}
+<table style="width:1200px">
+<tr>
+  <th>设备ID</th>
+  <th>楼宇ID</th>
+  <th>楼宇名</th>
+  <th>教室ID</th>
+  <th>教室名</th>
+  <th>品牌ID</th>
+  <th>中文</th>
+  <th>英文</th>
+  <th>型号</th>
+  <th>状态ID</th>
+  <th>状态</th>
+  <th>记录日期</th>
+  <th>状态记录</th>
+  <th>维护记录</th>
+  <th>问题记录</th>
+</tr>
+
+{% for projector in projector_list %}
+<tr>
+  <td>{{ projector.0 }}</td>
+  <td>{{ projector.1 }}</td>
+  <td>{{ projector.2 }}</td>
+  <td>{{ projector.3 }}</td>
+  <td>{{ projector.4 }}</td>
+  <td>{{ projector.5 }}</td>
+  <td>{{ projector.6 }}</td>
+  <td>{{ projector.7 }}</td>
+  <td>{{ projector.8 }}</td>
+  <td>{{ projector.9 }}</td>
+  <td>{{ projector.10 }}</td>
+  <td>{{ projector.11 | date:"Y-m-d" }}</td>
+  <td><a href="/projectors/Projector/{{ projector.0 }}/State" target="_blank">State Records</a></td>
+  <td><a href="/projectors/Projector/{{ projector.0 }}/Maintenance" target="_blank">Maintenance Records</a></td>
+  <td><a href="/projectors/Projector/{{ projector.0 }}/Problem" target="_blank">Problem</a></td>
+</tr>
+{% endfor %}
+</table>
+{% else %}
+	<p>No Projectors are avaible.</p>
+{% endif %}
+</body>
+</html>
